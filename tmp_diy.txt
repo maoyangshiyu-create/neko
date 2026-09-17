@@ -1,0 +1,121 @@
+                                  backgroundColor: editingTheme.css['--gg-plus-icon-bg'] || '#ffffff',
+                                  color: editingTheme.css['--gg-plus-icon-color'] || '#374151',
+                                }}
+                              >
+                                <ItemIcon className="w-3 h-3" />
+                              </div>
+                              <span
+                                className="text-[7px]"
+                                style={{ color: editingTheme.css['--gg-plus-item-text'] || editingTheme.css['--gg-text-primary'] || '#4b5563' }}
+                              >
+                                {item.name}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {/* 完整聊天底部工具栏 (语音切换、输入框、表情、加号、发送) */}
+                    <div
+                      className="h-7 px-1.5 flex items-center gap-1 border-t border-black/5 shrink-0 select-none shadow-2xs relative overflow-hidden"
+                      style={{
+                        backgroundColor: editingTheme.assets?.inputBg ? 'transparent' : (editingTheme.css['--gg-toolbar-bg'] || '#f9fafb')
+                      }}
+                    >
+                      {editingTheme.assets?.inputBg && (
+                        <div
+                          className="absolute inset-0 pointer-events-none z-0"
+                          style={getBubbleBgStyle({
+                            isUser: false,
+                            prefix: 'input',
+                            editingTheme,
+                            bubbleBgUrl: editingTheme.assets.inputBg,
+                            isDot9: editingTheme.css?.['--gg-is-dot9-inputBg'] !== 'false',
+                          })}
+                        />
+                      )}
+                      <div className="relative z-10 flex items-center justify-between w-full h-full gap-1">
+                      {/* 语音/键盘切换按钮 */}
+                      <button
+                        type="button"
+                        onClick={() => setChatInputMode(m => m === 'text' ? 'voice' : 'text')}
+                        className="w-5 h-5 rounded-full flex items-center justify-center hover:opacity-80 cursor-pointer shrink-0 transition-all"
+                        title="切换语音/键盘"
+                        style={{
+                          color: editingTheme.css['--gg-text-secondary'] || '#6b7280'
+                        }}
+                      >
+                        {editingTheme.assets?.voiceBtn ? (
+                          <img src={editingTheme.assets.voiceBtn} alt="voice" className="w-3.5 h-3.5 object-contain" />
+                        ) : chatInputMode === 'text' ? (
+                          <Mic className="w-3.5 h-3.5" />
+                        ) : (
+                          <FileText className="w-3.5 h-3.5" />
+                        )}
+                      </button>
+
+                      {/* 输入区域 / 按住说话条 */}
+                      {chatInputMode === 'text' ? (
+                        <div
+                          className="h-5 flex-1 rounded-md px-1.5 text-[8px] flex items-center border border-black/5 shadow-inner"
+                          style={{
+                            backgroundColor: editingTheme.css['--gg-input-bg'] || '#ffffff',
+                            color: editingTheme.css['--gg-input-text'] || '#111827'
+                          }}
+                        >
+                          输入消息...
+                        </div>
+                      ) : (
+                        <div
+                          className="h-5 flex-1 rounded-md text-[8px] font-bold flex items-center justify-center border border-black/10 shadow-2xs cursor-pointer"
+                          style={{
+                            backgroundColor: editingTheme.css['--gg-voice-field-bg'] || '#e5e7eb',
+                            color: editingTheme.css['--gg-voice-text'] || editingTheme.css['--gg-text-primary'] || '#111827'
+                          }}
+                        >
+                          按住 说话
+                        </div>
+                      )}
+
+                      {/* 表情图标 */}
+                      <div
+                        className="w-4.5 h-4.5 flex items-center justify-center opacity-70 hover:opacity-100 cursor-pointer shrink-0"
+                        style={{ color: editingTheme.css['--gg-text-secondary'] || '#6b7280' }}
+                      >
+                        <Smile className="w-3.5 h-3.5" />
+                      </div>
+
+                      {/* 加号拓展按钮 */}
+                      <button
+                        type="button"
+                        onClick={() => setShowChatPlusDrawer(prev => !prev)}
+                        className={`w-5 h-5 rounded-full flex items-center justify-center hover:opacity-80 cursor-pointer shrink-0 transition-all ${
+                          showChatPlusDrawer ? 'bg-black/10' : ''
+                        }`}
+                        title="打开/关闭拓展菜单"
+                        style={{
+                          color: editingTheme.css['--gg-plus-icon-color'] || editingTheme.css['--gg-text-secondary'] || '#6b7280'
+                        }}
+                      >
+                        {editingTheme.assets?.plusBtn ? (
+                          <img src={editingTheme.assets.plusBtn} alt="plus" className="w-3.5 h-3.5 object-contain" />
+                        ) : (
+                          <Plus className="w-3.5 h-3.5" />
+                        )}
+                      </button>
+
+                      {/* 发送按钮 */}
+                      <div
+                        className="px-1.5 h-5 rounded text-[7.5px] font-bold flex items-center justify-center shadow-2xs shrink-0 cursor-pointer"
+                        style={{
+                          backgroundColor: editingTheme.css['--gg-send-btn-bg'] || editingTheme.css['--gg-accent-color'] || '#07c160',
+                          color: editingTheme.css['--gg-send-btn-text'] || '#ffffff'
+                        }}
+                      >
+                        发送
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                )}

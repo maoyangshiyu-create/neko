@@ -1,0 +1,82 @@
+{
+  "entities": {
+    "TwitterPost": {
+      "title": "Twitter Post",
+      "description": "A post in the X (Twitter) app",
+      "type": "object",
+      "properties": {
+        "authorId": { "type": "string", "description": "UID of the author" },
+        "authorName": { "type": "string", "description": "Display name of the author" },
+        "authorAvatar": { "type": "string", "description": "Avatar URL of the author" },
+        "content": { "type": "string", "maxLength": 1000, "description": "Text content of the post" },
+        "timestamp": { "type": "number", "description": "Creation timestamp" },
+        "likesCount": { "type": "number", "description": "Number of likes" },
+        "commentsCount": { "type": "number", "description": "Number of comments" }
+      },
+      "required": ["authorId", "authorName", "authorAvatar", "content", "timestamp"]
+    },
+    "TwitterComment": {
+      "title": "Twitter Comment",
+      "description": "A comment on a post",
+      "type": "object",
+      "properties": {
+        "authorId": { "type": "string" },
+        "authorName": { "type": "string" },
+        "authorAvatar": { "type": "string" },
+        "content": { "type": "string", "maxLength": 500 },
+        "timestamp": { "type": "number" }
+      },
+      "required": ["authorId", "authorName", "authorAvatar", "content", "timestamp"]
+    },
+    "TwitterProfile": {
+      "title": "Twitter Profile",
+      "description": "User profile on X",
+      "type": "object",
+      "properties": {
+        "displayName": { "type": "string", "maxLength": 50 },
+        "bio": { "type": "string", "maxLength": 160 },
+        "avatarUrl": { "type": "string" },
+        "bannerUrl": { "type": "string" }
+      }
+    },
+    "TwitterMessage": {
+      "title": "Twitter Direct Message",
+      "description": "Private message between users",
+      "type": "object",
+      "properties": {
+        "senderId": { "type": "string" },
+        "receiverId": { "type": "string" },
+        "text": { "type": "string", "maxLength": 2000 },
+        "timestamp": { "type": "number" }
+      },
+      "required": ["senderId", "receiverId", "text", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/twitterProfiles/{userId}": {
+      "schema": "TwitterProfile",
+      "description": "User profiles"
+    },
+    "/twitterPosts/{postId}": {
+      "schema": "TwitterPost",
+      "description": "Global feed of posts"
+    },
+    "/twitterPosts/{postId}/comments/{commentId}": {
+      "schema": "TwitterComment",
+      "description": "Comments on a specific post"
+    },
+    "/twitterPosts/{postId}/likes/{userId}": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "timestamp": { "type": "number" }
+        }
+      },
+      "description": "Users who liked the post"
+    },
+    "/twitterChats/{chatId}/messages/{messageId}": {
+      "schema": "TwitterMessage",
+      "description": "Private messages in a chat"
+    }
+  }
+}

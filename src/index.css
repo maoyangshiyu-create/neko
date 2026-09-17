@@ -1,0 +1,521 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'RenOuFangSong-16';
+  src: url('/fonts/RenOuFangSong-16.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* 根默认主题 (默认莫兰迪) */
+:root {
+  --font-caption: 12px;
+  --font-body-sm: 14px;
+  --font-body: 16px;
+  --font-h3: 20px;
+  --font-h2: 24px;
+  --font-h1: 32px;
+  --line-body: 1.6;
+  --line-heading: 1.2;
+
+  --global-bg: #f7f6f3;
+  --global-card: #ffffff;
+  --global-text: #1c1917;
+  --global-text-soft: #78716c;
+  --global-line: #e5e7eb;
+  --global-accent: #07c160;
+
+  --bg: #f2ede8;
+  --paper: #fbf8f5;
+  --ink: #5c5450;
+  --ink-soft: #948a84;
+  --line: #e3dad3;
+  --rose: #c9a2a0;
+  --sage: #a8b39c;
+  --sand: #d9c6a8;
+  --blue: #a6b7bf;
+  --danger: #c97b6f;
+  --accent: #a8b39c;
+  --accent-text: #ffffff;
+  --accent-deep: #8e9a82;
+  --radius: 14px;
+  --shadow: 0 4px 18px rgba(92, 84, 80, 0.08);
+  --glass-bg: rgba(251, 248, 245, 0.82);
+  --glass-border: rgba(227, 218, 211, 0.6);
+  --phone-border: #000000;
+
+  /* DIY Workshop Custom Theme Variables */
+  --gg-shell-bg: #000000;
+  --gg-accent-color: #a8b39c;
+  --gg-text-primary: #1c1917;
+  --gg-text-secondary: #78716c;
+  --gg-page-bg: #F0F0E9;
+
+  --gg-bubble-self: #95ec69;
+  --gg-bubble-self-text: #1c1917;
+  --gg-bubble-border-self: 1px solid #7ec952;
+  --gg-bubble-radius-self: 12px;
+  --gg-bubble-shadow-self: 0 1px 3px rgba(0,0,0,0.08);
+
+  --gg-bubble-other: #ffffff;
+  --gg-bubble-other-text: #1c1917;
+  --gg-bubble-border-other: 1px solid #e5e7eb;
+  --gg-bubble-radius-other: 12px;
+  --gg-bubble-shadow-other: 0 1px 3px rgba(0,0,0,0.08);
+
+  --gg-header-bg: #f3f4f6;
+  --gg-header-text: #111827;
+  --gg-header-blur: 12px;
+
+  --gg-toolbar-bg: #f9fafb;
+  --gg-input-bg: #ffffff;
+  --gg-input-text: #111827;
+  --gg-send-btn-bg: #07c160;
+  --gg-send-btn-text: #ffffff;
+
+  --gg-tabbar-bg: #f9fafb;
+  --gg-tabbar-label-color: #9ca3af;
+  --gg-tabbar-active-label-color: #07c160;
+
+  --gg-moments-feed-bg: #f3f4f6;
+  --gg-moments-card-bg: #ffffff;
+  --gg-moments-text: #1f2937;
+  --gg-moments-link-color: #576b95;
+
+  --gg-transfer-card-bg: #f6c453;
+  --gg-transfer-card-text: #6b3a1e;
+  --gg-transfer-card-border: 1px solid #d97a2b;
+
+  --gg-plus-item-text: #4b5563;
+  --gg-plus-icon-bg: #ffffff;
+  --gg-plus-icon-color: #374151;
+
+  --gg-voice-text: #1f2937;
+  --gg-voice-muted: #9ca3af;
+  --gg-voice-field-bg: #ffffff;
+  --gg-voice-submit-bg: #07c160;
+  --gg-voice-submit-text: #ffffff;
+  /* Functional Colors */
+  --gg-online-badge-bg: #7c9c6b;
+  --gg-online-badge-text: #ffffff;
+  --gg-success-color: #7c9c6b;
+  --gg-warning-color: #c9a86b;
+  --gg-danger-color: #c97b6f;
+  --gg-info-color: #8a9ab0;
+  --gg-delivery-badge-bg: rgba(124, 156, 107, 0.3);
+  --gg-delivery-badge-text: #7c9c6b;
+}
+
+/* 🟤 莫兰迪 */
+body.theme-morandi, .theme-morandi {
+  --bg: #f2ede8;
+  --paper: #fbf8f5;
+  --ink: #5c5450;
+  --ink-soft: #948a84;
+  --line: #e3dad3;
+  --rose: #c9a2a0;
+  --sage: #a8b39c;
+  --sand: #d9c6a8;
+  --blue: #a6b7bf;
+  --danger: #c97b6f;
+  --accent: #a8b39c;
+  --accent-text: #ffffff;
+  --accent-deep: #8e9a82;
+  --radius: 14px;
+  --shadow: 0 4px 18px rgba(92, 84, 80, 0.08);
+  --glass-bg: rgba(251, 248, 245, 0.85);
+  --glass-border: rgba(227, 218, 211, 0.6);
+  --phone-border: #3b3531;
+
+  /* Functional Colors */
+  --gg-online-badge-bg: #7c9c6b;
+  --gg-online-badge-text: #ffffff;
+  --gg-success-color: #7c9c6b;
+  --gg-warning-color: #c9a86b;
+  --gg-danger-color: #c97b6f;
+  --gg-info-color: #8a9ab0;
+  --gg-delivery-badge-bg: rgba(124, 156, 107, 0.3);
+  --gg-delivery-badge-text: #7c9c6b;
+
+  --global-bg: var(--gg-page-bg, #f2ede8);
+  --global-card: var(--paper, #fbf8f5);
+  --global-text: var(--gg-text-primary, var(--ink, #5c5450));
+  --global-text-soft: var(--gg-text-secondary, var(--ink-soft, #948a84));
+  --global-line: var(--line, #e3dad3);
+  --global-accent: var(--gg-accent-color, #a8b39c);
+}
+
+/* 🍬 马卡龙 */
+body.theme-macaron, .theme-macaron {
+  --bg: #fff5f8;
+  --paper: #ffffff;
+  --ink: #5b4a52;
+  --ink-soft: #a68b95;
+  --line: #ffd9e6;
+  --pink: #ffb3c6;
+  --mint: #b8f2d4;
+  --lemon: #fff2b3;
+  --lavender: #d9c6f2;
+  --danger: #ff8f8f;
+  --accent: #ffb3c6;
+  --accent-text: #ffffff;
+  --accent-deep: #ff8fa3;
+  --rose: #ff8fa3;
+  --sage: #b8f2d4;
+  --sand: #fff2b3;
+  --blue: #d9c6f2;
+  --radius: 20px;
+  --shadow: 0 8px 24px rgba(255, 179, 198, 0.28);
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(255, 217, 230, 0.7);
+  --phone-border: #4d3d44;
+
+  /* Functional Colors */
+  --gg-online-badge-bg: #7fdba0;
+  --gg-online-badge-text: #ffffff;
+  --gg-success-color: #7fdba0;
+  --gg-warning-color: #ffd166;
+  --gg-danger-color: #ff8f8f;
+  --gg-info-color: #a5b4fc;
+  --gg-delivery-badge-bg: rgba(127, 219, 160, 0.3);
+  --gg-delivery-badge-text: #7fdba0;
+
+  --global-bg: var(--gg-page-bg, #fff5f8);
+  --global-card: var(--paper, #ffffff);
+  --global-text: var(--gg-text-primary, var(--ink, #5b4a52));
+  --global-text-soft: var(--gg-text-secondary, var(--ink-soft, #a68b95));
+  --global-line: var(--line, #ffd9e6);
+  --global-accent: var(--gg-accent-color, #ffb3c6);
+}
+
+/* 🧊 玻璃拟态 */
+body.theme-glass, .theme-glass {
+  --bg: linear-gradient(145deg, #c9d6e8, #e8edf5);
+  --paper: rgba(255, 255, 255, 0.65);
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.35);
+  --ink: #2b2b33;
+  --ink-soft: #636675;
+  --line: rgba(255, 255, 255, 0.4);
+  --accent: #7c9cff;
+  --accent-text: #ffffff;
+  --accent-deep: #5b7fff;
+  --rose: #f472b6;
+  --sage: #34d399;
+  --sand: #fbbf24;
+  --blue: #7c9cff;
+  --danger: #f87171;
+  --radius: 18px;
+  --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  --phone-border: #000000;
+
+  /* Functional Colors */
+  --gg-online-badge-bg: #34d399;
+  --gg-online-badge-text: #ffffff;
+  --gg-success-color: #34d399;
+  --gg-warning-color: #fbbf24;
+  --gg-danger-color: #f87171;
+  --gg-info-color: #60a5fa;
+  --gg-delivery-badge-bg: rgba(52, 211, 153, 0.3);
+  --gg-delivery-badge-text: #34d399;
+
+  --global-bg: var(--gg-page-bg, #e8edf5);
+  --global-card: var(--paper, rgba(255, 255, 255, 0.65));
+  --global-text: var(--gg-text-primary, var(--ink, #2b2b33));
+  --global-text-soft: var(--gg-text-secondary, var(--ink-soft, #636675));
+  --global-line: var(--line, rgba(255, 255, 255, 0.4));
+  --global-accent: var(--gg-accent-color, #7c9cff);
+}
+
+/* ⬛ 黑白简约 */
+body.theme-mono, .theme-mono {
+  --bg: #ffffff;
+  --paper: #fafafa;
+  --ink: #111111;
+  --ink-soft: #6b6b6b;
+  --line: #e5e5e5;
+  --accent: #000000;
+  --accent-text: #ffffff;
+  --accent-deep: #333333;
+  --rose: #222222;
+  --sage: #444444;
+  --sand: #666666;
+  --blue: #111111;
+  --danger: #d64545;
+  --radius: 4px;
+  --shadow: none;
+  --glass-bg: #fafafa;
+  --glass-border: #e5e5e5;
+  --phone-border: #000000;
+
+  /* Functional Colors */
+  --gg-online-badge-bg: #333333;
+  --gg-online-badge-text: #ffffff;
+  --gg-success-color: #333333;
+  --gg-warning-color: #555555;
+  --gg-danger-color: #d64545;
+  --gg-info-color: #666666;
+  --gg-delivery-badge-bg: rgba(51, 51, 51, 0.2);
+  --gg-delivery-badge-text: #333333;
+
+  --global-bg: var(--gg-page-bg, #ffffff);
+  --global-card: var(--paper, #fafafa);
+  --global-text: var(--gg-text-primary, var(--ink, #111111));
+  --global-text-soft: var(--gg-text-secondary, var(--ink-soft, #6b6b6b));
+  --global-line: var(--line, #e5e5e5);
+  --global-accent: var(--gg-accent-color, #000000);
+}
+
+/* 🎀 洛可可 */
+body.theme-rococo, .theme-rococo {
+  --bg: #fdf6f0;
+  --paper: #fffaf5;
+  --ink: #6b4a52;
+  --ink-soft: #b398a0;
+  --line: #f0dfe0;
+  --accent: #e89aab;
+  --accent-text: #ffffff;
+  --accent-deep: #dc8a9d;
+  --rose: #f4b8c8;
+  --sage: #a8d5c8;
+  --sand: #f5d89a;
+  --blue: #b8d4e8;
+  --danger: #d68a8a;
+  --radius: 18px;
+  --shadow: 0 4px 20px rgba(212, 165, 175, 0.18);
+  --glass-bg: rgba(255, 250, 245, 0.85);
+  --glass-border: rgba(240, 223, 224, 0.7);
+  --phone-border: #d4a5af;
+
+  /* Functional Colors */
+  --gg-online-badge-bg: #a8d5c8;
+  --gg-online-badge-text: #ffffff;
+  --gg-success-color: #a8d5c8;
+  --gg-warning-color: #f5d89a;
+  --gg-danger-color: #d68a8a;
+  --gg-info-color: #b8d4e8;
+  --gg-delivery-badge-bg: rgba(168, 213, 200, 0.3);
+  --gg-delivery-badge-text: #6b4a52;
+
+  --global-bg: var(--gg-page-bg, #fdf6f0);
+  --global-card: var(--paper, #fffaf5);
+  --global-text: var(--gg-text-primary, var(--ink, #6b4a52));
+  --global-text-soft: var(--gg-text-secondary, var(--ink-soft, #b398a0));
+  --global-line: var(--line, #f0dfe0);
+  --global-accent: var(--gg-accent-color, #e89aab);
+}
+
+/* 果冻反馈 Jelly Feedback */
+.jelly-btn, 
+.jelly-touch,
+button:not(:disabled),
+.app-icon {
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.jelly-btn:active,
+.jelly-touch:active,
+button:not(:disabled):active,
+.app-icon:active {
+  transform: scale(0.92);
+}
+
+@keyframes jellyBounce {
+  0% { transform: scale(1); }
+  35% { transform: scale(0.88, 1.12); }
+  65% { transform: scale(1.08, 0.92); }
+  85% { transform: scale(0.97, 1.03); }
+  100% { transform: scale(1); }
+}
+
+.animate-jelly {
+  animation: jellyBounce 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes jellyPop {
+  0% {
+    transform: translate(-50%, 20px) scale(0.8);
+    opacity: 0;
+  }
+  70% {
+    transform: translate(-50%, -4px) scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, 0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes badgePop {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.3);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* 👑 洛可可专属主题 (Rococo Style - 独立锁定) */
+.rococo-theme {
+  --app-bg: #fdf6f0;
+  --app-card: #fffaf5;
+  --app-card-border: #f0dfe0;
+  --app-text: #6b4a52;
+  --app-text-soft: #b398a0;
+  --app-btn-bg: #e89aab;
+  --app-btn-text: #ffffff;
+  --app-item-bg: #fffaf5;
+  --app-item-border: #f0dfe0;
+  --app-item-text: #6b4a52;
+  --app-item-active: #e89aab;
+  --app-up: #7cb896;
+  --app-down: #d68a8a;
+  --app-divider: #f0dfe0;
+
+  /* 背景与卡片 */
+  --pet-bg: #fdf6f0;              /* 奶油象牙白 */
+  --pet-card: #fffaf5;            /* 珍珠白 */
+  --pet-card-border: #f0dfe0;     /* 浅粉边 */
+  --pet-shadow: 0 4px 20px rgba(212, 165, 175, 0.15);
+
+  /* 文字 */
+  --pet-text: #6b4a52;            /* 深玫瑰棕，珍珠白上清晰 */
+  --pet-text-soft: #b398a0;       /* 灰粉，次要文字 */
+  --pet-on-accent: #ffffff;       /* 强调色上文字，白 */
+
+  /* 6 项属性条（洛可可配色） */
+  --pet-bar-1: #f4b8c8;           /* 玫瑰粉 - 智力 */
+  --pet-bar-2: #a8d5c8;           /* 薄荷绿 - 体质 */
+  --pet-bar-3: #f5d89a;           /* 鹅黄 - 情商 */
+  --pet-bar-4: #c8b5e0;           /* 丁香紫 - 颜值 */
+  --pet-bar-5: #f4c8a8;           /* 蜜桃橙 - 心情 */
+  --pet-bar-6: #b8d4e8;           /* 淡天蓝 - 幸福感 */
+  --pet-bar-track: #f5e8e5;       /* 属性条底槽 */
+
+  /* 按钮 */
+  --pet-btn-bg: #e89aab;          /* 洛可可玫瑰 */
+  --pet-btn-text: #ffffff;
+  --pet-btn-hover: #dc8a9d;
+  --pet-btn-secondary-bg: #fffaf5;
+  --pet-btn-secondary-text: #6b4a52;
+  --pet-btn-secondary-border: #f0dfe0;
+
+  /* 事件选项卡 */
+  --pet-option-bg: #fffaf5;
+  --pet-option-border: #f0dfe0;
+  --pet-option-text: #6b4a52;
+  --pet-option-hover: #fdf0ec;
+  --pet-option-active: #e89aab;
+  --pet-option-active-text: #ffffff;
+
+  /* 属性升降 */
+  --pet-up: #7cb896;              /* 柔和绿 */
+  --pet-down: #d68a8a;            /* 柔和红 */
+
+  /* 金色点缀（用于边框装饰、等级徽章） */
+  --pet-gold: #d4b483;
+  --pet-gold-soft: #f0dfb8;
+}
+
+/* 🔒 强制色彩规范 (已与应用主体颜色同步) */
+.morandi-locked {
+  --bg: #fdf6f0;
+  --paper: #fffaf5;
+  --ink: #6b4a52;
+  --ink-soft: #b398a0;
+  --line: #f0dfe0;
+  --rose: #f4b8c8;
+  --sage: #a8d5c8;
+  --sand: #f5d89a;
+  --blue: #b8d4e8;
+  --danger: #d68a8a;
+  --accent: #e89aab;
+  --accent-text: #ffffff;
+  --accent-deep: #dc8a9d;
+
+  /* Custom overrides */
+  --gg-accent-color: #d9828b;
+  --gg-text-primary: #4a3b3d;
+  --gg-text-secondary: #7a585c;
+  --gg-page-bg: #fcf8f2;
+  --gg-header-bg: #f5ede4;
+  --gg-header-text: #593c3f;
+  --gg-toolbar-bg: #f5ede4;
+  --gg-input-bg: #ffffff;
+  --gg-input-text: #4a3b3d;
+  --gg-tabbar-bg: #f5ede4;
+  --app-bg: #fdf6f0;
+  --app-text: #6b4a52;
+}
+
+/* 🔒 推特强制白色锁定 */
+.twitter-white-locked {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+@keyframes shrinkX {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spinSlow 8s linear infinite;
+}
+
+@keyframes bannerEntry {
+  0% { transform: translateY(-20px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+.animate-shrink-x {
+  animation: shrinkX linear forwards;
+}
+
+@keyframes danmaku {
+  from { left: 100%; transform: translateX(0); }
+  to { left: 0%; transform: translateX(-100%); }
+}
+
+.animate-danmaku {
+  animation-name: danmaku;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+.animate-banner-entry {
+  animation: bannerEntry 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Global input and textarea typography: typed content is dark and crisp, placeholders are light */
+input, textarea {
+  color: var(--gg-input-text, #1c1917);
+}
+
+input::placeholder, textarea::placeholder {
+  color: #9ca3af;
+  opacity: 1;
+}
+
+input:focus, textarea:focus {
+  color: var(--gg-input-text, #1c1917);
+}
+
+

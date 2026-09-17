@@ -1,0 +1,6 @@
+{
+  "name": "iPhone 桌面与微信 AI 聊天模拟器",
+  "description": "375x700 动态岛 iPhone 桌面，内置微信完整应用（联系人, 聊天详情, AI回复, TTS语音, 通讯录分组, 朋友圈动态）与设置中心，支持本地持久化与果冻交互手感",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

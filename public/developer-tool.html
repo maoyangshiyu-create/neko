@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WePhone 开发者管理与激活码签发工具</title>
+  <style>
+    :root {
+      --bg: #0b1120;
+      --card-bg: #1e293b;
+      --card-sub: #0f172a;
+      --accent-gate: #f43f5e;
+      --accent-gate-hover: #e11d48;
+      --accent-bread: #10b981;
+      --accent-bread-hover: #059669;
+      --accent-gold: #f59e0b;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #334155;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 2rem 1rem;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      width: 100%;
+      max-width: 840px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    header {
+      text-align: center;
+      padding-bottom: 1.2rem;
+      border-bottom: 1px solid var(--border);
+    }
+    header h1 {
+      font-size: 1.6rem;
+      color: #fff;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    header p { color: var(--text-muted); font-size: 0.875rem; }
+
+    /* Nav Tabs */
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+    }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.65rem 1.3rem;
+      border-radius: 0.6rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tab-btn.active.gate-tab {
+      background: var(--card-bg);
+      color: #fff;
+      border: 1px solid var(--border);
+      border-bottom: 2px solid var(--accent-gate);
+    }
+    .tab-btn.active.bread-tab {
+      background: var(--card-bg);
+      color: #fff;
+      border: 1px solid var(--border);
+      border-bottom: 2px solid var(--accent-bread);
+    }
+    .tab-btn:hover:not(.active) {
+      color: #fff;
+      background: rgba(255,255,255,0.05);
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    }
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .btn {
+      color: #fff;
+      font-weight: 600;
+      border: none;
+      padding: 0.65rem 1.25rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-gate {
+      background: var(--accent-gate);
+    }
+    .btn-gate:hover { background: var(--accent-gate-hover); }
+    .btn-bread {
+      background: var(--accent-bread);
+    }
+    .btn-bread:hover { background: var(--accent-bread-hover); }
+    .btn-secondary {
+      background: #475569;
+    }
+    .btn-secondary:hover { background: #64748b; }
+    .btn-sm {
+      padding: 0.35rem 0.75rem;
+      font-size: 0.8rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+    input[type="text"], input[type="number"], select, textarea {
+      width: 100%;
+      background: var(--card-sub);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.65rem 0.85rem;
+      color: #fff;
+      font-family: monospace;
+      font-size: 0.9rem;
+    }
+    select { cursor: pointer; }
+    textarea { resize: vertical; min-height: 100px; }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+    }
+
+    .row {
+      display: flex;
+      gap: 1rem;
+    }
+    .col { flex: 1; }
+
+    .badge {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 0.35rem;
+      color: #fff;
+      font-weight: bold;
+    }
+    .badge-gate { background: #e11d48; }
+    .badge-bread { background: #059669; }
+
+    .result-box {
+      background: #090d16;
+      border: 1px solid #1e293b;
+      border-radius: 0.6rem;
+      padding: 0.8rem 1rem;
+      font-family: monospace;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+    }
+
+    .code-list {
+      max-height: 220px;
+      overflow-y: auto;
+      background: #090d16;
+      border: 1px solid #1e293b;
+      border-radius: 0.6rem;
+      padding: 0.5rem;
+      font-family: monospace;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+    .code-item {
+      padding: 0.45rem 0.6rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #1e293b;
+    }
+    .code-item:last-child { border-bottom: none; }
+    .code-item span { font-weight: bold; letter-spacing: 1px; }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 0.8rem 1.6rem;
+      background: #10b981;
+      color: #fff;
+      border-radius: 0.6rem;
+      font-size: 0.95rem;
+      font-weight: bold;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      display: none;
+      z-index: 99999;
+    }
+
+    .tip-card {
+      border-radius: 0.6rem;
+      padding: 0.85rem 1rem;
+      font-size: 0.84rem;
+      line-height: 1.5;
+    }
+    .tip-gate {
+      background: rgba(244, 63, 94, 0.08);
+      border: 1px solid rgba(244, 63, 94, 0.25);
+      color: #fda4af;
+    }
+    .tip-bread {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      color: #a7f3d0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🛠️ WePhone <span>短激活码签发工具箱</span></h1>
+      <p>所有激活码均升级为 16 位短码（20位以内），免配置公钥私钥，防篡改即开即用！</p>
+    </header>
+
+    <!-- Tab 切换 -->
+    <div class="tabs">
+      <button class="tab-btn active gate-tab" onclick="switchTab('gate')">🚪 网页门禁短激活码</button>
+      <button class="tab-btn bread-tab" onclick="switchTab('bread')">🥖 主题商店面包短激活码</button>
+    </div>
+
+    <!-- ================= TAB 1: 网页门禁短激活码 ================= -->
+    <div id="gateTab" class="tab-content">
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <div class="card-title">
+          <span>⚡ 生成门禁短激活码</span>
+          <span class="badge badge-gate">16 位短码 (WP00-XXXX-XXXX-XXXX)</span>
+        </div>
+
+        <div class="tip-card tip-gate" style="margin-bottom: 1rem;">
+          💡 <strong>说明：</strong> 生成的门禁码长度为 16 位字符（含连字符共 19 位，小于 20 位），用户在网页门禁弹窗中直接粘贴即可验证进入。
+        </div>
+
+        <div class="row">
+          <div class="col form-group">
+            <label>有效期类型：</label>
+            <select id="gateExpireSelect">
+              <option value="0">永久有效 (00)</option>
+              <option value="1">1 天体验 (01)</option>
+              <option value="3">3 天体验 (03)</option>
+              <option value="7">7 天有效 (07)</option>
+              <option value="30" selected>30 天月卡 (30)</option>
+              <option value="90">90 天季卡 (90)</option>
+              <option value="365">365 天年卡 (365)</option>
+            </select>
+          </div>
+
+          <div class="col form-group">
+            <label>生成数量：</label>
+            <select id="gateCountSelect">
+              <option value="1" selected>生成 1 张</option>
+              <option value="5">批量生成 5 张</option>
+              <option value="10">批量生成 10 张</option>
+              <option value="20">批量生成 20 张</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem;">
+          <button class="btn btn-gate" style="flex: 1;" onclick="generateGateCodes()">
+            <span>✨ 立即生成门禁短激活码</span>
+          </button>
+        </div>
+
+        <!-- 单个结果 -->
+        <div id="singleGateWrap" style="margin-top: 1.2rem; display: none;">
+          <label>生成的门禁短码（点击右侧一键复制）：</label>
+          <div class="result-box">
+            <span id="singleGateCodeText" style="color: #f43f5e; font-weight: bold; font-size: 1.15rem; letter-spacing: 1px;"></span>
+            <button class="btn btn-gate btn-sm" id="btnCopySingleGate" onclick="copyFromEl('singleGateCodeText', this)">一键复制</button>
+          </div>
+        </div>
+
+        <!-- 批量结果 -->
+        <div id="batchGateWrap" style="margin-top: 1.2rem; display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <label>批量门禁码列表：</label>
+            <button class="btn btn-secondary btn-sm" id="btnCopyAllGate" onclick="copyAllBatch('gate', this)">复制全部门禁码</button>
+          </div>
+          <div class="code-list" id="gateCodeList"></div>
+        </div>
+      </div>
+
+      <!-- 门禁在线验签测试 -->
+      <div class="card">
+        <div class="card-title">
+          <span>🔍 门禁码实时验签诊断</span>
+          <span class="badge badge-bread">本地实时检验</span>
+        </div>
+
+        <div class="form-group">
+          <label>输入待测试的门禁激活码：</label>
+          <div style="display: flex; gap: 0.5rem;">
+            <input type="text" id="testGateCodeInput" placeholder="输入或粘贴激活码，例如: WP00-XXXX-XXXX-XXXX" />
+            <button class="btn btn-secondary" onclick="testVerifyGateCode()">立即验证</button>
+          </div>
+        </div>
+
+        <div id="testGateResultBox" style="display: none; margin-top: 0.8rem; padding: 0.8rem 1rem; border-radius: 0.5rem; font-size: 0.88rem; font-family: monospace;"></div>
+
+        <div style="margin-top: 1rem; font-size: 0.82rem; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: 0.8rem;">
+          🔑 <strong>超级管理员通行码：</strong> <code>WEPHONE2026</code>（可在门禁页直接输入通行）
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= TAB 2: 主题商店面包短激活码 ================= -->
+    <div id="breadTab" class="tab-content" style="display: none;">
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <div class="card-title">
+          <span>🥖 生成主题商店面包激活码</span>
+          <span class="badge badge-bread">16 位短码 (BD00-64XX-XXXX-XXXX)</span>
+        </div>
+
+        <div class="tip-card tip-bread" style="margin-bottom: 1rem;">
+          💡 <strong>说明：</strong> 主题商店面包激活码已升级为 16 位短码（小于 20 位，汇率 <strong>1rmb = 10面包</strong>），用户在手机「主题商店」点击「兑换」即可增加对应面包余额，每次兑换防重放防篡改！
+        </div>
+
+        <div class="row">
+          <div class="col form-group">
+            <label>面包数量 (面额，1rmb=10面包)：</label>
+            <select id="breadAmountSelect">
+              <option value="50" selected>50 面包 (5 RMB / 刚好兑换「面包小狗」主题)</option>
+              <option value="100">100 面包 (10 RMB / 标准面额)</option>
+              <option value="200">200 面包 (20 RMB)</option>
+              <option value="500">500 面包 (50 RMB / 大包)</option>
+              <option value="1000">1000 面包 (100 RMB)</option>
+              <option value="9999">9999 面包 (无限)</option>
+            </select>
+          </div>
+
+          <div class="col form-group">
+            <label>生成数量：</label>
+            <select id="breadCountSelect">
+              <option value="1" selected>生成 1 张</option>
+              <option value="5">批量生成 5 张</option>
+              <option value="10">批量生成 10 张</option>
+              <option value="20">批量生成 20 张</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem;">
+          <button class="btn btn-bread" style="flex: 1;" onclick="generateBreadCodes()">
+            <span>✨ 立即生成面包短激活码</span>
+          </button>
+        </div>
+
+        <!-- 单个结果 -->
+        <div id="singleBreadWrap" style="margin-top: 1.2rem; display: none;">
+          <label>生成的面包短激活码（点击右侧一键复制）：</label>
+          <div class="result-box">
+            <span id="singleBreadCodeText" style="color: #10b981; font-weight: bold; font-size: 1.15rem; letter-spacing: 1px;"></span>
+            <button class="btn btn-bread btn-sm" id="btnCopySingleBread" onclick="copyFromEl('singleBreadCodeText', this)">一键复制</button>
+          </div>
+        </div>
+
+        <!-- 批量结果 -->
+        <div id="batchBreadWrap" style="margin-top: 1.2rem; display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <label>批量面包码列表：</label>
+            <button class="btn btn-secondary btn-sm" id="btnCopyAllBread" onclick="copyAllBatch('bread', this)">复制全部面包码</button>
+          </div>
+          <div class="code-list" id="breadCodeList"></div>
+        </div>
+      </div>
+
+      <!-- 面包码在线验签测试 -->
+      <div class="card">
+        <div class="card-title">
+          <span>🔍 面包码实时验签诊断</span>
+          <span class="badge badge-bread">本地实时检验</span>
+        </div>
+
+        <div class="form-group">
+          <label>输入待测试的面包激活码：</label>
+          <div style="display: flex; gap: 0.5rem;">
+            <input type="text" id="testBreadCodeInput" placeholder="输入或粘贴激活码，例如: BD00-64XX-XXXX-XXXX" />
+            <button class="btn btn-secondary" onclick="testVerifyBreadCode()">立即验证</button>
+          </div>
+        </div>
+
+        <div id="testBreadResultBox" style="display: none; margin-top: 0.8rem; padding: 0.8rem 1rem; border-radius: 0.5rem; font-size: 0.88rem; font-family: monospace;"></div>
+
+        <div style="margin-top: 1rem; font-size: 0.82rem; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: 0.8rem;">
+          🎁 <strong>预设通用福利码：</strong> <code>BREAD888</code>（可直接在主题商店兑换 888 面包）
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+  </div>
+
+  <script>
+    // ================= 核心常量与加密 =================
+    const GATE_SECRET_SALT = 'WEPHONE_ROCOCO_GATE_SECRET_SALT_2026_KEY';
+    const BREAD_SECRET_SALT = 'WEPHONE_THEME_STORE_BREAD_SALT_2026_KEY';
+    const BASE_EPOCH = 1735689600000; // 2025-01-01
+
+    let batchGateCodes = [];
+    let batchBreadCodes = [];
+
+    async function sha256Hex(str) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(str);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
+    }
+
+    // ================= 强壮的复制功能 (支持各种环境/iframe) =================
+    function copyToClipboard(text, btnElement) {
+      if (!text) return;
+      
+      let copied = false;
+
+      // 方式 1: 优先尝试 navigator.clipboard
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => {
+          showCopySuccess(btnElement, text);
+        }).catch(() => {
+          fallbackCopy(text, btnElement);
+        });
+        return;
+      }
+
+      // 方式 2: document.execCommand 回退
+      fallbackCopy(text, btnElement);
+    }
+
+    function fallbackCopy(text, btnElement) {
+      try {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed";
+        textArea.style.top = "0";
+        textArea.style.left = "0";
+        textArea.style.width = "2em";
+        textArea.style.height = "2em";
+        textArea.style.padding = "0";
+        textArea.style.border = "none";
+        textArea.style.outline = "none";
+        textArea.style.boxShadow = "none";
+        textArea.style.background = "transparent";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        textArea.setSelectionRange(0, 99999);
+        const successful = document.execCommand('copy');
+        document.body.removeChild(textArea);
+        if (successful) {
+          showCopySuccess(btnElement, text);
+          return;
+        }
+      } catch (err) {
+        console.warn("execCommand copy error:", err);
+      }
+
+      // 方式 3: 弹窗提示手动复制
+      prompt("请按 Ctrl+C / Cmd+C 复制激活码：", text);
+    }
+
+    function showCopySuccess(btnElement, text) {
+      showToast("已成功复制到剪贴板！");
+      if (btnElement) {
+        const oldText = btnElement.innerText;
+        btnElement.innerText = "已复制 ✔";
+        btnElement.style.opacity = "0.85";
+        setTimeout(() => {
+          btnElement.innerText = oldText;
+          btnElement.style.opacity = "1";
+        }, 1500);
+      }
+    }
+
+    function copyFromEl(elementId, btnElement) {
+      const el = document.getElementById(elementId);
+      if (!el) return;
+      copyToClipboard(el.innerText.trim(), btnElement);
+    }
+
+    function copyAllBatch(type, btnElement) {
+      const list = type === 'gate' ? batchGateCodes : batchBreadCodes;
+      if (!list || !list.length) return;
+      copyToClipboard(list.join('\n'), btnElement);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.innerText = msg;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 2200);
+    }
+
+    // ================= 门禁短码生成 =================
+    async function createOneGateCode(expireDays = 0) {
+      const prefix = 'WP';
+      let expireHex = '0000';
+      if (expireDays > 0) {
+        const expireTimestamp = Date.now() + expireDays * 86400 * 1000;
+        const daysFromEpoch = Math.max(1, Math.floor((expireTimestamp - BASE_EPOCH) / (86400 * 1000)));
+        expireHex = (daysFromEpoch & 0xFFFF).toString(16).padStart(4, '0').toUpperCase();
+      }
+
+      const nonceArr = new Uint8Array(2);
+      crypto.getRandomValues(nonceArr);
+      const nonceHex = Array.from(nonceArr).map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
+
+      const payload = `${prefix}${expireHex}${nonceHex}`;
+      const hash = await sha256Hex(`${GATE_SECRET_SALT}:${payload}`);
+      const checksum = hash.substring(0, 6);
+
+      const raw16 = `${payload}${checksum}`;
+      return `${raw16.slice(0, 4)}-${raw16.slice(4, 8)}-${raw16.slice(8, 12)}-${raw16.slice(12, 16)}`;
+    }
+
+    async function generateGateCodes() {
+      const expireDays = parseInt(document.getElementById('gateExpireSelect').value, 10);
+      const count = parseInt(document.getElementById('gateCountSelect').value, 10);
+
+      batchGateCodes = [];
+      for (let i = 0; i < count; i++) {
+        const code = await createOneGateCode(expireDays);
+        batchGateCodes.push(code);
+      }
+
+      if (count === 1) {
+        document.getElementById('singleGateWrap').style.display = 'block';
+        document.getElementById('batchGateWrap').style.display = 'none';
+        document.getElementById('singleGateCodeText').innerText = batchGateCodes[0];
+      } else {
+        document.getElementById('singleGateWrap').style.display = 'none';
+        document.getElementById('batchGateWrap').style.display = 'block';
+        const listDiv = document.getElementById('gateCodeList');
+        listDiv.innerHTML = batchGateCodes.map((code) => `
+          <div class="code-item">
+            <span style="color: #f43f5e;">${code}</span>
+            <button class="btn btn-secondary btn-sm" onclick="copyToClipboard('${code}', this)">复制</button>
+          </div>
+        `).join('');
+      }
+
+      showToast(`已生成 ${count} 个门禁短激活码！`);
+    }
+
+    async function testVerifyGateCode() {
+      const input = document.getElementById('testGateCodeInput').value.trim();
+      const resultBox = document.getElementById('testGateResultBox');
+      resultBox.style.display = 'block';
+
+      if (!input) {
+        resultBox.style.background = '#3b1219';
+        resultBox.style.color = '#f87171';
+        resultBox.innerText = '❌ 请先输入激活码！';
+        return;
+      }
+
+      const upper = input.replace(/-/g, '').toUpperCase();
+      if (['WEPHONE2026', 'WEPHONE888', 'WEPHONE666', 'VIP2026'].includes(upper)) {
+        resultBox.style.background = '#064e3b';
+        resultBox.style.color = '#34d399';
+        resultBox.innerHTML = `✅ <strong>验证通过！</strong> [管理员超级通行码] 永久有效`;
+        return;
+      }
+
+      if (upper.length === 16 && upper.startsWith('WP')) {
+        const payload = upper.slice(0, 10);
+        const checksum = upper.slice(10, 16);
+        const expectedHash = await sha256Hex(`${GATE_SECRET_SALT}:${payload}`);
+        const expectedChecksum = expectedHash.substring(0, 6);
+
+        if (checksum !== expectedChecksum) {
+          resultBox.style.background = '#3b1219';
+          resultBox.style.color = '#f87171';
+          resultBox.innerHTML = `❌ <strong>校验失败：</strong> 签名无效或已被篡改！`;
+          return;
+        }
+
+        const expireHex = payload.slice(2, 6);
+        if (expireHex === '0000') {
+          resultBox.style.background = '#064e3b';
+          resultBox.style.color = '#34d399';
+          resultBox.innerHTML = `✅ <strong>验证通过！</strong> [16位门禁短码] 永久有效`;
+        } else {
+          const daysFromEpoch = parseInt(expireHex, 16);
+          const expireTimestamp = BASE_EPOCH + (daysFromEpoch + 1) * 86400 * 1000;
+          const expireDate = new Date(expireTimestamp).toLocaleString();
+          if (Date.now() > expireTimestamp) {
+            resultBox.style.background = '#3b1219';
+            resultBox.style.color = '#f87171';
+            resultBox.innerHTML = `❌ <strong>激活码已过期：</strong> 到期时间 ${expireDate}`;
+          } else {
+            resultBox.style.background = '#064e3b';
+            resultBox.style.color = '#34d399';
+            resultBox.innerHTML = `✅ <strong>验证通过！</strong> [16位门禁短码] 有效期至：${expireDate}`;
+          }
+        }
+        return;
+      }
+
+      resultBox.style.background = '#3b1219';
+      resultBox.style.color = '#f87171';
+      resultBox.innerText = '❌ 激活码格式错误（需为 16 位短码，如 WP00-XXXX-XXXX-XXXX）';
+    }
+
+    // ================= 主题商店面包短码生成 =================
+    async function createOneBreadCode(breadAmount = 100) {
+      const prefix = 'BD';
+      const breadClamp = Math.max(1, Math.min(65535, Math.floor(breadAmount)));
+      const breadHex = breadClamp.toString(16).padStart(4, '0').toUpperCase();
+
+      const nonceArr = new Uint8Array(2);
+      crypto.getRandomValues(nonceArr);
+      const nonceHex = Array.from(nonceArr).map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
+
+      const payload = `${prefix}${breadHex}${nonceHex}`;
+      const hash = await sha256Hex(`${BREAD_SECRET_SALT}:${payload}`);
+      const checksum = hash.substring(0, 6);
+
+      const raw16 = `${payload}${checksum}`;
+      return `${raw16.slice(0, 4)}-${raw16.slice(4, 8)}-${raw16.slice(8, 12)}-${raw16.slice(12, 16)}`;
+    }
+
+    async function generateBreadCodes() {
+      const bread = parseInt(document.getElementById('breadAmountSelect').value, 10);
+      const count = parseInt(document.getElementById('breadCountSelect').value, 10);
+
+      batchBreadCodes = [];
+      for (let i = 0; i < count; i++) {
+        const code = await createOneBreadCode(bread);
+        batchBreadCodes.push(code);
+      }
+
+      if (count === 1) {
+        document.getElementById('singleBreadWrap').style.display = 'block';
+        document.getElementById('batchBreadWrap').style.display = 'none';
+        document.getElementById('singleBreadCodeText').innerText = batchBreadCodes[0];
+      } else {
+        document.getElementById('singleBreadWrap').style.display = 'none';
+        document.getElementById('batchBreadWrap').style.display = 'block';
+        const listDiv = document.getElementById('breadCodeList');
+        listDiv.innerHTML = batchBreadCodes.map((code) => `
+          <div class="code-item">
+            <span style="color: #10b981;">${code}</span>
+            <button class="btn btn-secondary btn-sm" onclick="copyToClipboard('${code}', this)">复制</button>
+          </div>
+        `).join('');
+      }
+
+      showToast(`已生成 ${count} 个 ${bread} 面包短激活码！`);
+    }
+
+    async function testVerifyBreadCode() {
+      const input = document.getElementById('testBreadCodeInput').value.trim();
+      const resultBox = document.getElementById('testBreadResultBox');
+      resultBox.style.display = 'block';
+
+      if (!input) {
+        resultBox.style.background = '#3b1219';
+        resultBox.style.color = '#f87171';
+        resultBox.innerText = '❌ 请先输入激活码！';
+        return;
+      }
+
+      const upper = input.replace(/-/g, '').toUpperCase();
+      const presets = { BREAD888: 888, BREAD100: 100, BREAD200: 200, BREAD500: 500, BREAD9999: 9999, WEPHONE888: 888, VIP888: 888 };
+      if (presets[upper] !== undefined) {
+        resultBox.style.background = '#064e3b';
+        resultBox.style.color = '#34d399';
+        resultBox.innerHTML = `✅ <strong>验证通过！</strong> [预设福利码] 可兑换 <strong>${presets[upper]}</strong> 个面包`;
+        return;
+      }
+
+      if (upper.length === 16 && upper.startsWith('BD')) {
+        const payload = upper.slice(0, 10);
+        const checksum = upper.slice(10, 16);
+        const expectedHash = await sha256Hex(`${BREAD_SECRET_SALT}:${payload}`);
+        const expectedChecksum = expectedHash.substring(0, 6);
+
+        if (checksum !== expectedChecksum) {
+          resultBox.style.background = '#3b1219';
+          resultBox.style.color = '#f87171';
+          resultBox.innerHTML = `❌ <strong>校验失败：</strong> 面包激活码无效或已被篡改！`;
+          return;
+        }
+
+        const breadHex = payload.slice(2, 6);
+        const amount = parseInt(breadHex, 16) || 100;
+        resultBox.style.background = '#064e3b';
+        resultBox.style.color = '#34d399';
+        resultBox.innerHTML = `✅ <strong>验证通过！</strong> [16位面包短码] 兑换面额：<strong>${amount}</strong> 面包`;
+        return;
+      }
+
+      resultBox.style.background = '#3b1219';
+      resultBox.style.color = '#f87171';
+      resultBox.innerText = '❌ 激活码格式错误（需为 16 位短码，如 BD00-64XX-XXXX-XXXX）';
+    }
+
+    // ================= Tab 切换 =================
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+      if (tab === 'gate') {
+        document.querySelectorAll('.tab-btn')[0].classList.add('active');
+        document.getElementById('gateTab').style.display = 'block';
+      } else {
+        document.querySelectorAll('.tab-btn')[1].classList.add('active');
+        document.getElementById('breadTab').style.display = 'block';
+      }
+    }
+
+    // 初始化默认各生成一组
+    window.onload = () => {
+      generateGateCodes();
+      generateBreadCodes();
+    };
+  </script>
+</body>
+</html>
